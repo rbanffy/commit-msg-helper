@@ -1,29 +1,18 @@
-import re
-import subprocess
 import sys
 
-JIRA_TICKET_RE = re.compile(r"^[A-Z]{2,}-\d+")
-SAFE_BRANCHES = {"main", "master", "develop"}
+from commit_msg_helper.helpers import get_current_branch, is_jira_in_branch_name, is_safe_branch
 
 
 def branch_needs_jira() -> int:
-    try:
-        branch = (
-            subprocess.check_output(
-                ["git", "symbolic-ref", "--short", "HEAD"],
-                stderr=subprocess.DEVNULL,
-            )
-            .decode()
-            .strip()
-        )
-    except subprocess.CalledProcessError:
+    branch = get_current_branch()
+    if branch is None:
         print(
             "branch-needs-jira: could not determine current branch (detached HEAD?)",
             file=sys.stderr,
         )
         return 1
 
-    if branch in SAFE_BRANCHES or JIRA_TICKET_RE.match(branch):
+    if is_safe_branch(branch) or is_jira_in_branch_name(branch):
         return 0
 
     print(
