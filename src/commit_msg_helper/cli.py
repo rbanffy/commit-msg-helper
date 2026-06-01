@@ -8,6 +8,12 @@ from commit_msg_helper.helpers import (
 
 
 def branch_needs_jira() -> int:
+    """Pre-commit hook entry point.
+
+    Exits 0 if the current branch starts with a Jira ticket (e.g. ABC-123),
+    or is one of the well-known safe branches (main, master, develop).
+    Exits 1 otherwise, printing a diagnostic message to stderr.
+    """
     branch = get_current_branch()
     if branch is None:
         print(
@@ -27,4 +33,9 @@ def branch_needs_jira() -> int:
 
 
 def message_needs_jira() -> int:
+    """Pre-commit hook entry point (not yet implemented).
+
+    Will verify that the commit message references a Jira ticket.
+    Currently a no-op that always exits 0.
+    """
     return 0
