@@ -1,6 +1,6 @@
 import pytest
 
-from commit_msg_helper.helpers import is_jira_in_branch_name, is_safe_branch
+from commit_msg_helper.helpers import get_jira_ticket_from_branch, is_jira_in_branch_name, is_safe_branch
 
 
 class TestIsJiraInBranchName:
@@ -50,3 +50,26 @@ class TestIsSafeBranch:
 
     def test_empty_string_is_not_safe(self):
         assert is_safe_branch("") is False
+
+
+class TestGetJiraTicketFromBranch:
+    def test_returns_ticket_from_plain_ticket_branch(self):
+        assert get_jira_ticket_from_branch("ABC-123") == "ABC-123"
+
+    def test_returns_ticket_prefix_from_descriptive_branch(self):
+        assert get_jira_ticket_from_branch("ABC-123-my-feature") == "ABC-123"
+
+    def test_returns_ticket_with_long_project_key(self):
+        assert get_jira_ticket_from_branch("MYPROJECT-42-fix-bug") == "MYPROJECT-42"
+
+    def test_returns_none_for_plain_branch(self):
+        assert get_jira_ticket_from_branch("my-feature") is None
+
+    def test_returns_none_for_safe_branch(self):
+        assert get_jira_ticket_from_branch("main") is None
+
+    def test_returns_none_for_lowercase_prefix(self):
+        assert get_jira_ticket_from_branch("abc-123") is None
+
+    def test_returns_none_for_empty_string(self):
+        assert get_jira_ticket_from_branch("") is None

@@ -28,3 +28,9 @@ def is_jira_in_branch_name(branch: str) -> bool:
 def is_safe_branch(branch: str) -> bool:
     """Return True if the branch is a well-known branch that doesn't need a Jira ticket."""
     return branch in SAFE_BRANCHES
+
+
+def get_jira_ticket_from_branch(branch: str) -> str | None:
+    """Return the Jira ticket prefix from the branch name, or None if not present."""
+    match = JIRA_TICKET_RE.match(branch)
+    return match.group(0) if match else None
