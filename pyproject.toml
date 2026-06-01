@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "commit-msg-helper"
+version = "0.1.0"
+description = "A pre-commit helper for commit messages"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "Apache-2.0"
+authors = [
+  { name = "rbanffy" }
+]
+
+[project.scripts]
+branch-needs-jira = "commit_msg_helper.cli:branch_needs_jira"
+message-needs-jira = "commit_msg_helper.cli:message_needs_jira"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
