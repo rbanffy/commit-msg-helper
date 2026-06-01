@@ -3,19 +3,27 @@ import subprocess
 import sys
 
 JIRA_TICKET_RE = re.compile(r"^[A-Z]{2,}-\d+")
+SAFE_BRANCHES = {"main", "master", "develop"}
 
 
 def branch_needs_jira() -> int:
     try:
-        branch = subprocess.check_output(
-            ["git", "symbolic-ref", "--short", "HEAD"],
-            stderr=subprocess.DEVNULL,
-        ).decode().strip()
+        branch = (
+            subprocess.check_output(
+                ["git", "symbolic-ref", "--short", "HEAD"],
+                stderr=subprocess.DEVNULL,
+            )
+            .decode()
+            .strip()
+        )
     except subprocess.CalledProcessError:
-        print("branch-needs-jira: could not determine current branch (detached HEAD?)", file=sys.stderr)
+        print(
+            "branch-needs-jira: could not determine current branch (detached HEAD?)",
+            file=sys.stderr,
+        )
         return 1
 
-    if branch in {"main", "master", "develop"} or JIRA_TICKET_RE.match(branch):
+    if branch in SAFE_BRANCHES or JIRA_TICKET_RE.match(branch):
         return 0
 
     print(
