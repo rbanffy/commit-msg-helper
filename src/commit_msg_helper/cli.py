@@ -1,6 +1,10 @@
 import sys
 
-from commit_msg_helper.helpers import get_current_branch, is_jira_in_branch_name, is_safe_branch
+from commit_msg_helper.helpers import (
+    get_current_branch,
+    is_jira_in_branch_name,
+    is_safe_branch,
+)
 
 
 def branch_needs_jira() -> int:
