@@ -1,7 +1,9 @@
 import sys
+from pathlib import Path
 
 from commit_msg_helper.helpers import (
     get_current_branch,
+    get_jira_ticket_from_branch,
     is_jira_in_branch_name,
     is_safe_branch,
 )
@@ -33,9 +35,24 @@ def branch_needs_jira() -> int:
 
 
 def message_needs_jira() -> int:
-    """Pre-commit hook entry point (not yet implemented).
+    """Pre-commit hook entry point (prepare-commit-msg stage).
 
-    Will verify that the commit message references a Jira ticket.
-    Currently a no-op that always exits 0.
+    Prepends the Jira ticket found in the current branch name to the
+    commit message, unless the branch does not start with a Jira ticket
+    or the message already begins with one.
     """
+    branch = get_current_branch()
+    if branch is None:
+        return 0
+
+    ticket = get_jira_ticket_from_branch(branch)
+    if ticket is None:
+        return 0
+
+    msg_path = Path(sys.argv[1])
+    msg = msg_path.read_text()
+
+    if not msg.startswith(ticket):
+        msg_path.write_text(f"{ticket} {msg}")
+
     return 0
