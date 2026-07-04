@@ -1,0 +1,14 @@
+- id: branch-needs-jira
+  name: Branch name includes Jira ticket
+  language: python
+  entry: branch-needs-jira
+  pass_filenames: false
+  always_run: true
+
+- id: message-needs-jira
+  name: Prepend Jira ticket to commit message
+  language: python
+  entry: message-needs-jira
+  pass_filenames: false
+  always_run: true
+  stages: [prepare-commit-msg]

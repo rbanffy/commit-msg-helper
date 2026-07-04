@@ -7,6 +7,13 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+    -   id: message-needs-jira
+        name: Prepend Jira ticket to commit message
+        entry: message-needs-jira
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [prepare-commit-msg]
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.3.0
     hooks:
