@@ -1,6 +1,36 @@
-import pytest
+import subprocess
+from unittest.mock import patch
 
-from commit_msg_helper.helpers import get_jira_ticket_from_branch, is_jira_in_branch_name, is_safe_branch
+from commit_msg_helper.helpers import (
+    get_current_branch,
+    get_jira_ticket_from_branch,
+    is_jira_in_branch_name,
+    is_safe_branch,
+)
+
+
+class TestGetCurrentBranch:
+    def test_returns_branch_name(self):
+        with patch(
+            "commit_msg_helper.helpers.subprocess.check_output",
+            return_value=b"ABC-123-my-feature\n",
+        ):
+            assert get_current_branch() == "ABC-123-my-feature"
+
+    def test_strips_whitespace(self):
+        with patch(
+            "commit_msg_helper.helpers.subprocess.check_output",
+            return_value=b"  main  \n",
+        ):
+            assert get_current_branch() == "main"
+
+    def test_returns_none_on_detached_head(self):
+        with patch(
+            "commit_msg_helper.helpers.subprocess.check_output",
+            side_effect=subprocess.CalledProcessError(128, "git"),
+        ):
+            assert get_current_branch() is None
+
 
 
 class TestIsJiraInBranchName:
