@@ -13,10 +13,10 @@ repos:
         language: system
         pass_filenames: true
         always_run: true
-        stages: [prepare-commit-msg]
+        stages: [prepare-commit-msg, commit-msg]
     -   id: pytest
         name: Run unit tests
-        entry: uv run pytest
+        entry: pytest
         language: system
         pass_filenames: false
         always_run: true
