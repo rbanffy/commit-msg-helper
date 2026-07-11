@@ -16,7 +16,7 @@ repos:
         stages: [prepare-commit-msg, commit-msg]
     -   id: pytest
         name: Run unit tests
-        entry: pytest
+        entry: uv run pytest
         language: system
         pass_filenames: false
         always_run: true
