@@ -42,7 +42,7 @@ def message_needs_jira() -> int:
     or the message already begins with one.
     """
     branch = get_current_branch()
-    if branch is None:
+    if branch is None or is_safe_branch(branch):
         return 0
 
     ticket = get_jira_ticket_from_branch(branch)
