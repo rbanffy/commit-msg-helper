@@ -33,11 +33,12 @@ repos:
     -   id: message-needs-jira
 ```
 
-Then install the hooks — both hook types are required:
+Then install the hooks — all three hook types are required:
 
 ```shell
 pre-commit install
 pre-commit install --hook-type prepare-commit-msg
+pre-commit install --hook-type commit-msg
 ```
 
 ## Development
