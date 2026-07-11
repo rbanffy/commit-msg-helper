@@ -11,4 +11,4 @@
   entry: message-needs-jira
   pass_filenames: true
   always_run: true
-  stages: [prepare-commit-msg]
+  stages: [prepare-commit-msg, commit-msg]
