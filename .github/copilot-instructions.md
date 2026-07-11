@@ -4,7 +4,7 @@ This repository is a pre-commit plugin written in Python. It exposes Git hooks
 as console script entry points defined in `pyproject.toml`. Follow the
 conventions below when adding or modifying code.
 
----
+______________________________________________________________________
 
 ## Project structure
 
@@ -15,6 +15,7 @@ src/commit_msg_helper/
     helpers.py        — pure helper functions and compiled regexes
 tests/
     test_helpers.py   — unit tests for helpers.py
+    test_cli.py       — unit tests for cli.py entry-point behavior
 pyproject.toml        — build config, entry points, dev dependencies
 .pre-commit-hooks.yaml — hook definitions consumed by pre-commit
 ```
@@ -22,7 +23,7 @@ pyproject.toml        — build config, entry points, dev dependencies
 Keep `cli.py` thin: it calls helpers, prints diagnostics to stderr, and returns
 an integer exit code. All logic belongs in `helpers.py`.
 
----
+______________________________________________________________________
 
 ## Entry points (hooks)
 
@@ -47,21 +48,21 @@ def my_hook() -> int:
     ...
 ```
 
----
+______________________________________________________________________
 
 ## Hook types and how pre-commit passes data
 
-| Hook stage       | How data arrives                        | `pass_filenames` |
-|------------------|-----------------------------------------|------------------|
-| `pre-commit`     | Staged file paths as CLI arguments      | `true` (default) |
-| `commit-msg`     | Path to the commit message file via `$1`/`sys.argv[1]` | `false` |
-| `prepare-commit-msg` | Same as commit-msg                  | `false`          |
-| Branch/env hooks | Environment variables or `git` commands | `false`          |
+| Hook stage           | How data arrives                                       | `pass_filenames` |
+| -------------------- | ------------------------------------------------------ | ---------------- |
+| `pre-commit`         | Staged file paths as CLI arguments                     | `true` (default) |
+| `commit-msg`         | Path to the commit message file via `$1`/`sys.argv[1]` | `true`           |
+| `prepare-commit-msg` | Same as commit-msg                                     | `true`           |
+| Branch/env hooks     | Environment variables or `git` commands                | `false`          |
 
 For hooks that do not operate on files (e.g. branch name checks), always set
 `pass_filenames: false` and `always_run: true` in the hook definition.
 
----
+______________________________________________________________________
 
 ## `.pre-commit-hooks.yaml`
 
@@ -82,7 +83,7 @@ pre-commit manages an isolated, reproducible environment for consumers of this
 hook. Use `language: system` only in the local `.pre-commit-config.yaml` for
 development purposes.
 
----
+______________________________________________________________________
 
 ## Helper functions
 
@@ -103,7 +104,7 @@ def get_jira_ticket_from_branch(branch: str) -> str | None: ...
 def get_current_branch() -> str | None: ...  # returns None on detached HEAD
 ```
 
----
+______________________________________________________________________
 
 ## Safe / exempt branches
 
@@ -117,7 +118,7 @@ SAFE_BRANCHES = {"main", "master", "develop"}
 When adding new hooks that also need to exempt these branches, import and reuse
 `SAFE_BRANCHES` and `is_safe_branch()` — do not duplicate the set.
 
----
+______________________________________________________________________
 
 ## Git interaction
 
@@ -144,7 +145,7 @@ def message_needs_jira() -> int:
     ...
 ```
 
----
+______________________________________________________________________
 
 ## Testing
 
@@ -156,7 +157,7 @@ def message_needs_jira() -> int:
   safe branches).
 - Run tests with `uv run pytest`.
 
----
+______________________________________________________________________
 
 ## Code style
 
@@ -169,15 +170,15 @@ def message_needs_jira() -> int:
 - Try to make functions pure (no side effects) and testable in isolation. Avoid global state.
 - Avoid adding logic to the cli.py program as much as possible - all logic should be in the helpers.py file. The cli.py program should only be responsible for calling the helper functions and returning the appropriate exit code.
 
----
+______________________________________________________________________
 
 ## Adding a new hook — checklist
 
 1. Add the helper logic to `helpers.py` with an `is_*` or `get_*` function.
-2. Add the entry point function to `cli.py`; keep it to ~10 lines.
-3. Register the console script in `pyproject.toml` under `[project.scripts]`.
-4. Add the hook definition to `.pre-commit-hooks.yaml`.
-5. Add the hook to `.pre-commit-config.yaml` (local, `language: system`) for
+1. Add the entry point function to `cli.py`; keep it to ~10 lines.
+1. Register the console script in `pyproject.toml` under `[project.scripts]`.
+1. Add the hook definition to `.pre-commit-hooks.yaml`.
+1. Add the hook to `.pre-commit-config.yaml` (local, `language: system`) for
    development.
-6. Write tests in `tests/test_helpers.py` for the new helper functions.
-7. Update `README.md` with a description of the new hook.
+1. Write tests in `tests/test_helpers.py` for the new helper functions.
+1. Update `README.md` with a description of the new hook.
