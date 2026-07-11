@@ -167,6 +167,7 @@ def message_needs_jira() -> int:
 - No bare `except`; catch specific exceptions (`subprocess.CalledProcessError`,
   `OSError`, etc.).
 - Try to make functions pure (no side effects) and testable in isolation. Avoid global state.
+- Avoid adding logic to the cli.py program as much as possible - all logic should be in the helpers.py file. The cli.py program should only be responsible for calling the helper functions and returning the appropriate exit code.
 
 ---
 

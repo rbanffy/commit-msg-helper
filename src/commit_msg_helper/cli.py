@@ -49,10 +49,31 @@ def message_needs_jira() -> int:
     if ticket is None:
         return 0
 
+    if len(sys.argv) < 2:
+        print(
+            "message-needs-jira: missing commit message file path",
+            file=sys.stderr,
+        )
+        return 1
+
     msg_path = Path(sys.argv[1])
-    msg = msg_path.read_text()
+    try:
+        msg = msg_path.read_text()
+    except OSError as exc:
+        print(
+            f"message-needs-jira: could not read commit message file '{msg_path}': {exc}",
+            file=sys.stderr,
+        )
+        return 1
 
     if not msg.startswith(ticket):
-        msg_path.write_text(f"{ticket} {msg}")
+        try:
+            msg_path.write_text(f"{ticket} {msg}")
+        except OSError as exc:
+            print(
+                f"message-needs-jira: could not write commit message file '{msg_path}': {exc}",
+                file=sys.stderr,
+            )
+            return 1
 
     return 0
