@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=61"]
-build-backend = "setuptools.build_meta"
+requires = ["uv_build>=0.11,<0.12"]
+build-backend = "uv_build"
 
 [project]
 name = "commit-msg-helper"
@@ -16,12 +16,6 @@ authors = [
 [project.scripts]
 branch-needs-jira = "commit_msg_helper.cli:branch_needs_jira"
 message-needs-jira = "commit_msg_helper.cli:message_needs_jira"
-
-[tool.setuptools]
-package-dir = { "" = "src" }
-
-[tool.setuptools.packages.find]
-where = ["src"]
 
 [dependency-groups]
 dev = [
