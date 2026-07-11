@@ -19,6 +19,8 @@ message-needs-jira = "commit_msg_helper.cli:message_needs_jira"
 
 [dependency-groups]
 dev = [
+    "mdformat>=1.0.0",
+    "mdformat-gfm>=1.0.0",
     "pytest>=8.3.5",
     "pytest-cov>=7.1.0",
     "ruff>=0.15.15",
